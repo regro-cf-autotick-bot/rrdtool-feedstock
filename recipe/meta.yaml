@@ -37,7 +37,7 @@ requirements:
     - gettext
     - glib
     - libpng
-    - libxml2
+    - libxml2-devel
     - pango
   run:
     # Looks pretty stable
