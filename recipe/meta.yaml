@@ -1,5 +1,5 @@
 {% set name = "rrdtool" %}
-{% set version = "1.9.0" %}
+{% set version = "1.10.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/oetiker/rrdtool-1.x/archive/v{{ version }}.tar.gz
-  sha256: 405f4ce365e2e37bdeff9bbb844cbedf9b36dde7344b31449e369315a3df5ef0
+  sha256: 931bf5395e00d0563d0cdd1d731bdb3acf93e4c361a891d31deb4977ea35c7fd
   patches:
     - cloexec.patch
 
