@@ -11,8 +11,6 @@ package:
 source:
   url: https://github.com/oetiker/rrdtool-1.x/archive/v${{ version }}.tar.gz
   sha256: 3f98a07cf00a16a811716f925e0ccb105a51183743bbd65b997aea11c9e15943
-  patches:
-    - cloexec.patch
 
 build:
   # Fails with "Bad CPU type in executable" when cross-compiling
