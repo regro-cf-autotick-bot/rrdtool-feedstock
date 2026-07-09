@@ -3,7 +3,7 @@ About rrdtool-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/rrdtool-feedstock/blob/main/LICENSE.txt)
 
-Home: https://www.rrdtool.org
+Home: https://www.rrdtool.org/
 
 Package license: GPL-2.0-or-later
 
@@ -17,19 +17,11 @@ RRDtool is a little program for easily maintaining a database of
 time-series data. It comes with a charting program for drawing
 pretty graphs based on the data stored.
 
-
 Current build status
 ====================
 
 
 <table><tr>
-    <td>Travis</td>
-    <td>
-      <a href="https://app.travis-ci.com/conda-forge/rrdtool-feedstock">
-        <img alt="linux" src="https://img.shields.io/travis/com/conda-forge/rrdtool-feedstock/main.svg?label=Linux">
-      </a>
-    </td>
-  </tr><tr>
     <td>GitHub Actions</td>
     <td>
       <a href="https://github.com/conda-forge/rrdtool-feedstock/actions/workflows/conda-build.yml">
@@ -54,6 +46,13 @@ Current build status
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=10587&branchName=main">
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/rrdtool-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=10587&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/rrdtool-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_" alt="variant">
                 </a>
               </td>
             </tr>
