@@ -1,0 +1,20 @@
+Link libcairo directly instead of relying on pangocairo
+
+rrdtool's graph code calls libcairo functions directly (cairo_create,
+cairo_*_surface_create, ...), but configure only links -lpangocairo and
+leaves the direct cairo check commented out. This leaves librrd.so
+underlinked against libcairo (no DT_NEEDED entry): the cairo symbols only
+resolve transitively via libpangocairo. Re-enable the cairo check so the
+library that is actually used is also linked and declared.
+
+--- a/configure.ac
++++ b/configure.ac
+@@ -645,7 +645,7 @@
+ EX_CHECK_ALL(png,        png_access_version_number, png.h,                  libpng,      1.4.8,  ftp://ftp.simplesystems.org/pub/libpng/png/src/, "")
+ dnl EX_CHECK_ALL(freetype,   FT_Init_FreeType,          ft2build.h,		freetype2,   2.4.6,  http://download.savannah.gnu.org/releases/freetype/, /usr/include/freetype2)
+ dnl EX_CHECK_ALL(fontconfig, FcInit,                    fontconfig.h,		fontconfig,  2.8.0,  http://www.freedesktop.org/software/fontconfig/release/, /usr/include)
+-dnl EX_CHECK_ALL(cairo,      cairo_font_options_create,     cairo.h,                cairo-png,   1.10.2,  http://cairographics.org/releases/, "")
++EX_CHECK_ALL(cairo,      cairo_font_options_create,     cairo.h,                cairo-png,   1.10.2,  http://cairographics.org/releases/, "")
+ dnl EX_CHECK_ALL(cairo,      cairo_svg_surface_create,      cairo-svg.h,            cairo-svg,   1.10.2,  http://cairographics.org/releases/, "")
+ dnl EX_CHECK_ALL(cairo,      cairo_pdf_surface_create,      cairo-pdf.h,            cairo-pdf,   1.10.2,  http://cairographics.org/releases/, "")
+ dnl EX_CHECK_ALL(cairo,      cairo_ps_surface_create,       cairo-ps.h,             cairo-ps,    1.10.2,  http://cairographics.org/releases/, "")
