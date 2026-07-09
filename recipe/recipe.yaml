@@ -25,6 +25,11 @@ build:
     skip_pyc_compilation:
       - if: osx and arm64
         then: share/rrdtool/examples/stripes.py
+  dynamic_linking:
+    # Everything librrd links is a declared dependency and every declared
+    # dependency is linked, so hold that line and fail the build if it slips.
+    overlinking_behavior: error
+    overdepending_behavior: error
 
 requirements:
   build:
@@ -62,7 +67,39 @@ requirements:
 
 tests:
   - script:
-      - rrdtool --help
+      # End-to-end: create -> update -> graph. `graph` renders through
+      # cairo/pango, so it also proves libcairo is linked and usable at runtime.
+      - rrdtool create test.rrd --step 300 DS:x:GAUGE:600:U:U RRA:AVERAGE:0.5:1:24
+      - rrdtool update test.rrd N:42
+      - rrdtool graph test.png --start end-2h DEF:x=test.rrd:x:AVERAGE LINE1:x#ff0000
+      - test -s test.png
+  - package_contents:
+      # strict: every packaged file must match a pattern below, so anything
+      # unexpected (e.g. the stray fontconfig cache we now clean up) fails.
+      strict: true
+      bin:
+        - rrdtool
+        - rrdcached
+        - rrdcgi
+        - rrdcreate
+        - rrdinfo
+        - rrdupdate
+      lib:
+        - librrd
+      include:
+        - rrd.h
+        - rrd_client.h
+        - rrd_format.h
+      files:
+        # Broad, directory-level globs so new examples/locales or a soname bump
+        # are absorbed while strict still flags anything outside these paths.
+        - bin/rrd*
+        - include/rrd*.h
+        - lib/librrd.*
+        - lib/pkgconfig/librrd.pc
+        - lib/systemd/system/rrdcached.*
+        - share/locale/*/LC_MESSAGES/*.mo
+        - share/rrdtool/**
 
 about:
   license: GPL-2.0-or-later

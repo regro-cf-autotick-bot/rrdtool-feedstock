@@ -32,3 +32,7 @@ make check XFAIL_TESTS="${XFAIL_TESTS}" || (cat tests/test-suite.log && exit 1)
 fi
 
 make install
+
+# "make check" runs rrdtool, which makes fontconfig write a host-specific
+# cache under $PREFIX/var/cache; drop it so it does not ship in the package.
+rm -rf "${PREFIX}/var/cache/fontconfig"
