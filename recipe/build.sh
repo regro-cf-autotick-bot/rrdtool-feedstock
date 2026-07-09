@@ -26,6 +26,11 @@ if [[ "$(uname)" == "Darwin" && "${PKG_VERSION}" == "1.7.2" ]]; then
     # https://github.com/oetiker/rrdtool-1.x/issues/1012
     XFAIL_TESTS="${XFAIL_TESTS} rpn2"
 fi
+if [[ "$(uname)" == "Darwin" ]]; then
+    # xport3's harness uses a bash 4.3+ nameref (`local -n`), but macOS ships
+    # bash 3.2; rrdtool's xport itself works, only the test plumbing fails.
+    XFAIL_TESTS="${XFAIL_TESTS} xport3"
+fi
 
 if [[ "${CONDA_BUILD_CROSS_COMPILATION:-}" != "1" || "${CROSSCOMPILING_EMULATOR}" != "" ]]; then
 make check XFAIL_TESTS="${XFAIL_TESTS}" || (cat tests/test-suite.log && exit 1)
