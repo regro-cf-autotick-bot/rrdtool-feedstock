@@ -1,28 +1,36 @@
-{% set name = "rrdtool" %}
-{% set version = "1.10.3" %}
+schema_version: 1
+
+context:
+  name: rrdtool
+  version: "1.10.3"
 
 package:
-  name: {{ name|lower }}
-  version: {{ version }}
+  name: ${{ name|lower }}
+  version: ${{ version }}
 
 source:
-  url: https://github.com/oetiker/rrdtool-1.x/archive/v{{ version }}.tar.gz
+  url: https://github.com/oetiker/rrdtool-1.x/archive/v${{ version }}.tar.gz
   sha256: 3f98a07cf00a16a811716f925e0ccb105a51183743bbd65b997aea11c9e15943
   patches:
     - cloexec.patch
 
 build:
-  number: 0
-  skip: true  # [win]
   # Fails with "Bad CPU type in executable" when cross-compiling
-  skip_compile_pyc:   # [osx and arm64]
-    - share/rrdtool/examples/stripes.py  # [osx and arm64]
+  number: 0
+  skip:
+    - win
+    - ppc64le
+  python:
+    skip_pyc_compilation:
+      - if: osx and arm64
+        then: share/rrdtool/examples/stripes.py
 
 requirements:
   build:
-    - gnuconfig  # [unix]
-    - {{ compiler('c') }}
-    - {{ stdlib("c") }}
+    - if: unix
+      then: gnuconfig
+    - ${{ compiler('c') }}
+    - ${{ stdlib("c") }}
     - autoconf
     - automake
     - harfbuzz
@@ -42,14 +50,13 @@ requirements:
   run:
     # Looks pretty stable
     # https://abi-laboratory.pro/index.php?view=timeline&l=pango
-    - {{ pin_compatible('pango') }}
+    - ${{ pin_compatible('pango') }}
 
-test:
-  commands:
-    - rrdtool --help
+tests:
+  - script:
+      - rrdtool --help
 
 about:
-  home: https://www.rrdtool.org
   license: GPL-2.0-or-later
   license_file: LICENSE
   summary: Round Robin Database Tool
@@ -57,9 +64,11 @@ about:
     RRDtool is a little program for easily maintaining a database of
     time-series data. It comes with a charting program for drawing
     pretty graphs based on the data stored.
-  doc_url: https://www.rrdtool.org/doc/index.en.html
-  dev_url: https://github.com/oetiker/rrdtool-1.x/
+  homepage: https://www.rrdtool.org
+  repository: https://github.com/oetiker/rrdtool-1.x/
+  documentation: https://www.rrdtool.org/doc/index.en.html
 
 extra:
   recipe-maintainers:
     - chrisburr
+
