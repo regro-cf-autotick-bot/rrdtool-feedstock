@@ -34,21 +34,33 @@ requirements:
     - harfbuzz
     - make
     - libtool
+    # msgfmt/autopoint to compile & bootstrap the .po catalogs; runs on the
+    # build machine, so build- (not host-) side for correct cross-compilation
+    - gettext-tools
     - pkg-config
     # Required for "make check"
     - coreutils
     - bc
   host:
     - cairo
-    - gettext
     - glib
     - libpng
     - libxml2-devel
     - pango
+    # gettext is external (AM_GNU_GETTEXT); libintl is part of glibc on Linux
+    # but a separate library on macOS, so it is only needed there.
+    - if: osx
+      then: libintl-devel
   run:
-    # Looks pretty stable
-    # https://abi-laboratory.pro/index.php?view=timeline&l=pango
-    - ${{ pin_compatible('pango') }}
+    # pango's run-export already applies a compatible pin; libintl has no
+    # run-export, so the macOS runtime dependency must be listed explicitly.
+    - if: osx
+      then: libintl
+  ignore_run_exports:
+    by_name:
+      # cairo is used only via pangocairo (rrdtool doesn't link libcairo
+      # directly), so it is guaranteed at runtime through the pango dependency.
+      - cairo
 
 tests:
   - script:
