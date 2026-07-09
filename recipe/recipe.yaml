@@ -11,6 +11,9 @@ package:
 source:
   url: https://github.com/oetiker/rrdtool-1.x/archive/v${{ version }}.tar.gz
   sha256: 3f98a07cf00a16a811716f925e0ccb105a51183743bbd65b997aea11c9e15943
+  patches:
+    # Link libcairo directly; rrdtool uses it but only links -lpangocairo
+    - link-libcairo.patch
 
 build:
   # Fails with "Bad CPU type in executable" when cross-compiling
@@ -56,11 +59,6 @@ requirements:
     # run-export, so the macOS runtime dependency must be listed explicitly.
     - if: osx
       then: libintl
-  ignore_run_exports:
-    by_name:
-      # cairo is used only via pangocairo (rrdtool doesn't link libcairo
-      # directly), so it is guaranteed at runtime through the pango dependency.
-      - cairo
 
 tests:
   - script:
